@@ -1,0 +1,20 @@
+groups:
+  - name: microservicios-eventos
+    rules:
+      - alert: ServicioCaido
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Servicio {{ $labels.job }} caido"
+          description: "{{ $labels.job }} no responde desde hace 30s."
+
+      - alert: TasaErrores5xxAlta
+        expr: sum(rate(http_server_requests_seconds_count{status=~"5.."}[1m])) by (application) > 0.2
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Errores 5xx altos en {{ $labels.application }}"
+          description: "La tasa de respuestas 5xx supera el umbral en {{ $labels.application }}."

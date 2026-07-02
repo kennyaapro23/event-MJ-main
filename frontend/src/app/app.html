@@ -1,0 +1,19 @@
+@if (auth.authed()) {
+  <nav class="navbar">
+    <a class="navbar-brand" routerLink="/dashboard">EventosMS</a>
+    <ul class="navbar-nav">
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/eventos" routerLinkActive="active">Eventos</a></li>
+      <li><a routerLink="/participantes" routerLinkActive="active">Participantes</a></li>
+      <li><a routerLink="/inscripciones" routerLinkActive="active">Inscripciones</a></li>
+      <li><a routerLink="/pagos" routerLinkActive="active">Pagos</a></li>
+      <li><a routerLink="/asistencia" routerLinkActive="active">Asistencia</a></li>
+      <li><a routerLink="/checkin" routerLinkActive="active">Check-in</a></li>
+    </ul>
+    <button class="btn btn-secondary btn-sm" (click)="logout()">Salir</button>
+  </nav>
+}
+
+<main class="container">
+  <router-outlet />
+</main>

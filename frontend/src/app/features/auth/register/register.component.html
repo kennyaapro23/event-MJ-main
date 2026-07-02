@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="card register-card">
+    <h1 class="page-title">Crear cuenta</h1>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          id="username"
+          name="username"
+          class="form-control"
+          type="text"
+          placeholder="Ingresa tu usuario"
+          [(ngModel)]="username"
+          [disabled]="submitting()"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contrasena</label>
+        <input
+          id="password"
+          name="password"
+          class="form-control"
+          type="password"
+          placeholder="Ingresa tu contrasena"
+          [(ngModel)]="password"
+          [disabled]="submitting()"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="role">Rol</label>
+        <select
+          id="role"
+          name="role"
+          class="form-control"
+          [(ngModel)]="role"
+          [disabled]="submitting()"
+        >
+          <option value="ROLE_USER">ROLE_USER</option>
+          <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+        </select>
+      </div>
+
+      <div class="toolbar">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="submitting() || !username || !password"
+        >
+          @if (submitting()) {
+            Registrando...
+          } @else {
+            Registrarme
+          }
+        </button>
+      </div>
+    </form>
+
+    <p class="register-footer muted">
+      <a routerLink="/login">Ya tengo cuenta</a>
+    </p>
+  </div>
+</div>

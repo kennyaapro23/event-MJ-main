@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="toolbar">
+    <h1 class="page-title">Inscripciones</h1>
+    <a class="btn btn-secondary btn-sm" routerLink="/dashboard">Volver al panel</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+  @if (success) {
+    <div class="alert alert-success">{{ success }}</div>
+  }
+
+  <!-- Formulario de inscripcion -->
+  <div class="card">
+    <h2 class="section-title">Nueva inscripcion</h2>
+
+    @if (loading) {
+      <p class="muted">Cargando participantes y eventos...</p>
+    }
+
+    <div class="grid">
+      <div class="form-group">
+        <label for="participante">Participante</label>
+        <select
+          id="participante"
+          class="form-control"
+          [(ngModel)]="participantId"
+          [disabled]="submitting"
+        >
+          <option [ngValue]="null">-- Selecciona un participante --</option>
+          @for (p of participants; track p.participantId) {
+            <option [ngValue]="p.participantId">
+              {{ p.firstName }} {{ p.lastName }} ({{ p.email }})
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="evento">Evento</label>
+        <select
+          id="evento"
+          class="form-control"
+          [(ngModel)]="eventId"
+          [disabled]="submitting"
+        >
+          <option [ngValue]="null">-- Selecciona un evento --</option>
+          @for (e of events; track e.eventId) {
+            <option [ngValue]="e.eventId">
+              {{ e.name }} (#{{ e.eventId }})
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="observaciones">Observaciones</label>
+      <textarea
+        id="observaciones"
+        class="form-control"
+        [(ngModel)]="observaciones"
+        [disabled]="submitting"
+        placeholder="Notas opcionales de la inscripcion"
+      ></textarea>
+    </div>
+
+    <p class="muted">
+      El identificador del evento se almacena como texto y vincula a este
+      participante con dicho evento.
+    </p>
+
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="inscribir()"
+      [disabled]="submitting"
+    >
+      {{ submitting ? 'Inscribiendo...' : 'Inscribir' }}
+    </button>
+  </div>
+
+  <!-- Listado de inscripciones -->
+  <div class="card">
+    <h2 class="section-title">Inscripciones registradas</h2>
+
+    @if (loadingList) {
+      <p class="muted">Cargando inscripciones...</p>
+    } @else if (registros.length === 0) {
+      <div class="empty">Aun no hay inscripciones registradas.</div>
+    } @else {
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID inscripcion</th>
+              <th>Participante</th>
+              <th>Evento (id)</th>
+              <th>Fecha</th>
+              <th>Observaciones</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of registros; track r.idAttendance) {
+              <tr>
+                <td>{{ r.idAttendance }}</td>
+                <td>{{ r.participantDTO?.firstName }} {{ r.participantDTO?.lastName }}</td>
+                <td><span class="badge badge-muted">{{ r.idEvento }}</span></td>
+                <td>{{ r.timestamp | date:'short' }}</td>
+                <td>{{ r.observations || '—' }}</td>
+                <td>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    type="button"
+                    (click)="eliminar(r.idAttendance)"
+                    [disabled]="deletingId === r.idAttendance"
+                  >
+                    {{ deletingId === r.idAttendance ? 'Eliminando...' : 'Eliminar' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

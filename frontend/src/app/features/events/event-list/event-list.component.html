@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="toolbar">
+    <h1 class="page-title">Eventos</h1>
+    <a class="btn btn-primary" routerLink="/eventos/nuevo">+ Nuevo evento</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  <div class="card">
+    @if (loading) {
+      <div class="empty">Cargando eventos...</div>
+    } @else if (events.length === 0) {
+      <div class="empty">No hay eventos registrados.</div>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Fechas</th>
+              <th>Modalidad</th>
+              <th>Tipo</th>
+              <th>Precio</th>
+              <th>Capacidad</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (e of events; track e.eventId) {
+              <tr>
+                <td>{{ e.eventId }}</td>
+                <td>{{ e.name }}</td>
+                <td>{{ e.startDate }} a {{ e.endDate }}</td>
+                <td>{{ e.modality }}</td>
+                <td>{{ e.eventType }}</td>
+                <td>
+                  @if (e.eventType === 'PAID') {
+                    {{ e.price | currency: 'PEN' : 'symbol' : '1.2-2' }}
+                  } @else {
+                    {{ e.price | number: '1.2-2' }}
+                  }
+                </td>
+                <td>{{ e.maxCapacity }}</td>
+                <td>
+                  @if (e.status === 'ACTIVE') {
+                    <span class="badge badge-success">ACTIVO</span>
+                  } @else {
+                    <span class="badge badge-muted">INACTIVO</span>
+                  }
+                </td>
+                <td class="actions">
+                  <button class="btn btn-secondary btn-sm" (click)="toggleStatus(e)">
+                    {{ e.status === 'ACTIVE' ? 'Desactivar' : 'Activar' }}
+                  </button>
+                  <button class="btn btn-danger btn-sm" (click)="remove(e)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

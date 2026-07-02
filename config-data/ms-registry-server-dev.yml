@@ -1,0 +1,29 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: ms-registry-server
+
+eureka:
+  instance:
+    hostname: registry-server
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://registry-server:8095/eureka/
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 5000
+    wait-time-in-ms-when-sync-empty: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

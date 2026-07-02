@@ -1,0 +1,53 @@
+<div class="container login-container">
+  <div class="card login-card">
+    <h1 class="page-title">Iniciar sesion</h1>
+
+    @if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          id="username"
+          name="username"
+          class="form-control"
+          type="text"
+          required
+          [(ngModel)]="username"
+          [disabled]="submitting()"
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contrasena</label>
+        <input
+          id="password"
+          name="password"
+          class="form-control"
+          type="password"
+          required
+          [(ngModel)]="password"
+          [disabled]="submitting()"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary login-submit"
+        [disabled]="submitting() || !username || !password"
+      >
+        {{ submitting() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="muted login-hint">Demo: admin / admin123</p>
+
+    <p class="login-register">
+      <a routerLink="/register">Crear cuenta</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="container">
+  <h1 class="page-title">Registrar asistencia</h1>
+
+  <!-- Generar asistencia -->
+  <div class="card">
+    <h2>Generar asistencia</h2>
+
+    <div class="form-group">
+      <label for="registroId">Registro ID</label>
+      <input id="registroId" type="number" class="form-control"
+             [(ngModel)]="form.registroId" name="registroId" placeholder="Ej. 1" />
+    </div>
+
+    <div class="form-group">
+      <label for="participantId">Participant ID</label>
+      <input id="participantId" type="number" class="form-control"
+             [(ngModel)]="form.participantId" name="participantId" placeholder="Ej. 1" />
+    </div>
+
+    <div class="form-group">
+      <label for="eventoId">Evento ID</label>
+      <input id="eventoId" type="number" class="form-control"
+             [(ngModel)]="form.eventoId" name="eventoId" placeholder="Ej. 1" />
+    </div>
+
+    <div class="form-group">
+      <label for="observaciones">Observaciones</label>
+      <textarea id="observaciones" class="form-control" rows="3"
+                [(ngModel)]="form.observaciones" name="observaciones"
+                placeholder="Notas opcionales"></textarea>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-primary" (click)="generar()" [disabled]="creating">
+        {{ creating ? 'Generando...' : 'Generar asistencia' }}
+      </button>
+    </div>
+
+    @if (createError) {
+      <div class="alert alert-error">{{ createError }}</div>
+    }
+
+    @if (created) {
+      <div class="alert alert-success">Asistencia generada correctamente.</div>
+      <div class="qr-box">
+        <div class="qr-label">Codigo QR para check-in:</div>
+        <div class="qr-code">{{ created.codigoQr }}</div>
+        <div class="muted qr-hint">Copialo y usalo en la pagina Check-in</div>
+        <div class="toolbar">
+          <a class="btn btn-secondary btn-sm" routerLink="/checkin">Ir a Check-in</a>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Asistencias del evento -->
+  <div class="card">
+    <h2>Asistencias del evento</h2>
+
+    <div class="toolbar">
+      <div class="form-group">
+        <label for="eventoIdBuscar">Evento ID</label>
+        <input id="eventoIdBuscar" type="number" class="form-control"
+               [(ngModel)]="eventoIdBuscar" name="eventoIdBuscar" placeholder="Ej. 1" />
+      </div>
+      <button class="btn btn-primary" (click)="buscar()" [disabled]="loading">
+        {{ loading ? 'Cargando...' : 'Ver asistencias' }}
+      </button>
+    </div>
+
+    @if (listError) {
+      <div class="alert alert-error">{{ listError }}</div>
+    }
+
+    @if (loading) {
+      <p class="muted">Cargando asistencias...</p>
+    } @else if (searched && asistencias.length === 0 && !listError) {
+      <div class="empty">No hay asistencias para este evento.</div>
+    } @else if (asistencias.length > 0) {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ParticipantId</th>
+            <th>Estado</th>
+            <th>Codigo QR</th>
+            <th>Entrada</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of asistencias; track a.asistenciaId) {
+            <tr>
+              <td>{{ a.asistenciaId }}</td>
+              <td>{{ a.participantId }}</td>
+              <td><span [class]="badgeClass(a.estado)">{{ a.estado }}</span></td>
+              <td class="mono">{{ a.codigoQr }}</td>
+              <td>{{ a.fechaEntrada ? (a.fechaEntrada | date:'short') : '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

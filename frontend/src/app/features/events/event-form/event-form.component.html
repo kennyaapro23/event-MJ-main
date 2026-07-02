@@ -1,0 +1,169 @@
+<div class="container">
+  <div class="toolbar">
+    <h1 class="page-title">Nuevo evento</h1>
+    <a routerLink="/eventos" class="btn btn-secondary btn-sm">Volver a eventos</a>
+  </div>
+
+  <div class="card">
+    @if (error) {
+      <div class="alert alert-error">
+        {{ error }}
+        @if (validationErrors) {
+          <ul class="ve-list">
+            @for (entry of validationErrors | keyvalue; track entry.key) {
+              <li><strong>{{ entry.key }}:</strong> {{ entry.value }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <form (ngSubmit)="submit()" #eventForm="ngForm">
+      <div class="form-group">
+        <label for="name">Nombre *</label>
+        <input
+          id="name"
+          name="name"
+          class="form-control"
+          type="text"
+          [(ngModel)]="model.name"
+          required
+          placeholder="Nombre del evento"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripcion</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          [(ngModel)]="model.description"
+          placeholder="Descripcion del evento"
+        ></textarea>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label for="startDate">Fecha de inicio</label>
+          <input
+            id="startDate"
+            name="startDate"
+            class="form-control"
+            type="date"
+            [min]="today"
+            [(ngModel)]="model.startDate"
+          />
+          <span class="muted">La fecha de inicio debe ser hoy o posterior.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="endDate">Fecha de fin</label>
+          <input
+            id="endDate"
+            name="endDate"
+            class="form-control"
+            type="date"
+            [min]="model.startDate || today"
+            [(ngModel)]="model.endDate"
+          />
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label for="modality">Modalidad</label>
+          <select
+            id="modality"
+            name="modality"
+            class="form-control"
+            [(ngModel)]="model.modality"
+          >
+            <option value="PRESENTIAL">Presencial</option>
+            <option value="VIRTUAL">Virtual</option>
+            <option value="HYBRID">Hibrido</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="eventType">Tipo de evento</label>
+          <select
+            id="eventType"
+            name="eventType"
+            class="form-control"
+            [(ngModel)]="model.eventType"
+          >
+            <option value="FREE">Gratuito</option>
+            <option value="PAID">De pago</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label for="maxCapacity">Capacidad maxima</label>
+          <input
+            id="maxCapacity"
+            name="maxCapacity"
+            class="form-control"
+            type="number"
+            min="1"
+            [(ngModel)]="model.maxCapacity"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Precio</label>
+          <input
+            id="price"
+            name="price"
+            class="form-control"
+            type="number"
+            min="0"
+            step="0.01"
+            [(ngModel)]="model.price"
+          />
+          <span class="muted">Precio en la moneda del evento.</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label for="organizerId">Organizador</label>
+          <input
+            id="organizerId"
+            name="organizerId"
+            class="form-control"
+            type="number"
+            min="1"
+            [(ngModel)]="model.organizerId"
+          />
+          <span class="muted">ID del organizador (admin = 1)</span>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Direccion</label>
+          <input
+            id="address"
+            name="address"
+            class="form-control"
+            type="text"
+            [(ngModel)]="model.address"
+            placeholder="Lugar o enlace del evento"
+          />
+        </div>
+      </div>
+
+      <div class="toolbar form-actions">
+        <a routerLink="/eventos" class="btn btn-secondary">Cancelar</a>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="saving || !eventForm.valid"
+        >
+          {{ saving ? 'Guardando...' : 'Crear evento' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

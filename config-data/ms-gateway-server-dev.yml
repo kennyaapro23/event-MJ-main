@@ -1,0 +1,79 @@
+  server:
+    port: 9095
+
+  spring:
+    application:
+      name: ms-gateway-server
+
+    cloud:
+      gateway:
+        server:
+          webflux:
+            discovery:
+              locator:
+                enabled: true
+                lower-case-service-id: true
+            routes:
+              - id: ms-participants-service
+                uri: lb://ms-participants-service
+                predicates:
+                  - Path=/participants/**
+
+              - id: ms-registro-service
+                uri: lb://ms-registro-service
+                predicates:
+                  - Path=/registros/**
+
+              - id: ms-events-service
+                uri: lb://ms-events-service
+                predicates:
+                  - Path=/events/**
+
+              - id: ms-pago-service
+                uri: lb://ms-pago-service
+                predicates:
+                  - Path=/pagos/**
+
+              - id: ms-asistencia-service
+                uri: lb://ms-asistencia-service
+                predicates:
+                  - Path=/asistencias/**
+
+              - id: openapi-events
+                uri: lb://ms-events-service
+                predicates:
+                  - Path=/openapi/events
+                filters:
+                  - RewritePath=/openapi/events,/v3/api-docs
+
+              - id: openapi-participants
+                uri: lb://ms-participants-service
+                predicates:
+                  - Path=/openapi/participants
+                filters:
+                  - RewritePath=/openapi/participants,/v3/api-docs
+
+              - id: openapi-registros
+                uri: lb://ms-registro-service
+                predicates:
+                  - Path=/openapi/registros
+                filters:
+                  - RewritePath=/openapi/registros,/v3/api-docs
+
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
+      urls:
+        - name: Eventos
+          url: /openapi/events
+        - name: Participantes
+          url: /openapi/participants
+        - name: Registros
+          url: /openapi/registros
+
+  eureka:
+    client:
+      service-url:
+        defaultZone: ${EUREKA_URI:http://registry-server:8095/eureka}
+    instance:
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

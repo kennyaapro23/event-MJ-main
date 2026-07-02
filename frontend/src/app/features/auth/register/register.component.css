@@ -1,0 +1,17 @@
+.register-card {
+  max-width: 420px;
+  margin: 3rem auto;
+}
+
+.register-footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.register-footer a {
+  text-decoration: none;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}

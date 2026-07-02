@@ -1,0 +1,152 @@
+<div class="container">
+  <div class="toolbar">
+    <h1 class="page-title">Pagos</h1>
+    <a class="btn btn-secondary btn-sm" routerLink="/">Inicio</a>
+  </div>
+
+  <!-- ===== Registrar pago ===== -->
+  <div class="card">
+    <h2 class="page-title">Registrar pago</h2>
+
+    @if (createSuccess) {
+      <div class="alert alert-success">{{ createSuccess }}</div>
+    }
+    @if (createError) {
+      <div class="alert alert-error">{{ createError }}</div>
+    }
+
+    <form (ngSubmit)="registrar()">
+      <div class="grid">
+        <div class="form-group">
+          <label for="registroId">ID de registro</label>
+          <input id="registroId" type="number" class="form-control"
+                 [(ngModel)]="form.registroId" name="registroId" required />
+        </div>
+
+        <div class="form-group">
+          <label for="participantId">ID de participante</label>
+          <input id="participantId" type="number" class="form-control"
+                 [(ngModel)]="form.participantId" name="participantId" required />
+        </div>
+
+        <div class="form-group">
+          <label for="eventoId">ID de evento</label>
+          <input id="eventoId" type="number" class="form-control"
+                 [(ngModel)]="form.eventoId" name="eventoId" required />
+        </div>
+
+        <div class="form-group">
+          <label for="monto">Monto</label>
+          <input id="monto" type="number" step="0.01" class="form-control"
+                 [(ngModel)]="form.monto" name="monto" required />
+        </div>
+
+        <div class="form-group">
+          <label for="metodoPago">Metodo de pago</label>
+          <select id="metodoPago" class="form-control"
+                  [(ngModel)]="form.metodoPago" name="metodoPago">
+            @for (m of metodos; track m) {
+              <option [value]="m">{{ m }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="referencia">Referencia</label>
+          <input id="referencia" type="text" class="form-control"
+                 [(ngModel)]="form.referencia" name="referencia" />
+        </div>
+      </div>
+
+      <p class="muted">El monto deberia coincidir con el precio del evento.</p>
+
+      <button type="submit" class="btn btn-primary" [disabled]="creating">
+        {{ creating ? 'Registrando...' : 'Registrar pago' }}
+      </button>
+    </form>
+
+    @if (pagos.length > 0) {
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Monto</th>
+              <th>Metodo</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Referencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of pagos; track p.pagoId) {
+              <tr>
+                <td>{{ p.pagoId }}</td>
+                <td>{{ p.monto | currency:'PEN':'symbol-narrow':'1.2-2' }}</td>
+                <td>{{ p.metodoPago }}</td>
+                <td><span [class]="badgeClass(p.estado)">{{ p.estado }}</span></td>
+                <td>{{ p.fechaPago ? (p.fechaPago | date:'short') : '-' }}</td>
+                <td>{{ p.referencia || '-' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <!-- ===== Consultar pagos ===== -->
+  <div class="card">
+    <h2 class="page-title">Consultar pagos</h2>
+
+    <div class="toolbar">
+      <div class="form-group query-field">
+        <label for="consultaId">ID de participante</label>
+        <input id="consultaId" type="number" class="form-control"
+               [(ngModel)]="consultaId" name="consultaId" />
+      </div>
+      <button type="button" class="btn btn-primary" (click)="consultar()" [disabled]="loading">
+        {{ loading ? 'Consultando...' : 'Ver pagos' }}
+      </button>
+    </div>
+
+    @if (queryError) {
+      <div class="alert alert-error">{{ queryError }}</div>
+    }
+
+    @if (loading) {
+      <p class="muted">Cargando pagos...</p>
+    } @else if (consultado) {
+      @if (consulta.length > 0) {
+        <div class="table-scroll">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Monto</th>
+                <th>Metodo</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Referencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of consulta; track p.pagoId) {
+                <tr>
+                  <td>{{ p.pagoId }}</td>
+                  <td>{{ p.monto | currency:'PEN':'symbol-narrow':'1.2-2' }}</td>
+                  <td>{{ p.metodoPago }}</td>
+                  <td><span [class]="badgeClass(p.estado)">{{ p.estado }}</span></td>
+                  <td>{{ p.fechaPago ? (p.fechaPago | date:'short') : '-' }}</td>
+                  <td>{{ p.referencia || '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty">No se encontraron pagos para este participante.</div>
+      }
+    }
+  </div>
+</div>

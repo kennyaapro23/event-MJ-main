@@ -1,0 +1,20 @@
+server:
+  port: 7075
+
+spring:
+  application:
+    name: ms-config-server
+
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:/config-data/
+
+  security:
+    user:
+      name: root
+      password: 123456

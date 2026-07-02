@@ -1,0 +1,54 @@
+<div class="container">
+  <h1 class="page-title">Hola, {{ auth.username() }}</h1>
+
+  <div class="card">
+    <p class="muted flow">
+      Crear evento -> registrar participante -> inscribir (inscripcion) -> pagar -> generar
+      asistencia (QR) -> check-in
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h2 class="section-title">Resumen</h2>
+      <button class="btn btn-secondary btn-sm" (click)="loadStats()" [disabled]="loading()">
+        Actualizar
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="empty">Cargando estadísticas...</div>
+    } @else if (error()) {
+      <div class="alert alert-error">{{ error() }}</div>
+    } @else if (stats(); as s) {
+      @if (s.events === 0 && s.participants === 0 && s.registros === 0) {
+        <div class="empty">Aún no hay datos. Empieza creando un evento.</div>
+      } @else {
+        <div class="grid stats-grid">
+          <div class="stat">
+            <span class="stat-number">{{ s.events | number }}</span>
+            <span class="muted">Eventos</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{{ s.participants | number }}</span>
+            <span class="muted">Participantes</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">{{ s.registros | number }}</span>
+            <span class="muted">Inscripciones</span>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="grid">
+    @for (card of cards; track card.link) {
+      <a class="card nav-card" [routerLink]="card.link">
+        <span class="nav-emoji">{{ card.emoji }}</span>
+        <span class="nav-title">{{ card.title }}</span>
+        <span class="muted nav-desc">{{ card.description }}</span>
+      </a>
+    }
+  </div>
+</div>

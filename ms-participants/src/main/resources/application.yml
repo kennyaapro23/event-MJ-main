@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ms-participants-service
+  profiles:
+    active: development
+  config:
+    import: optional:configserver:http://root:123456@localhost:7075
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        max.block.ms: 5000

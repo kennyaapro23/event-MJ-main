@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: ms-asistencia-service
+  config:
+    import: optional:configserver:http://root:123456@localhost:7075
+  datasource:
+    url: jdbc:mysql://localhost:3306/ms_asistencia
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: 8098
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8095/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      participanteBuscarPorIdCB:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s

@@ -1,0 +1,10 @@
+.table-scroll {
+  overflow-x: auto;
+  margin-top: 1.25rem;
+}
+
+.query-field {
+  flex: 1;
+  min-width: 220px;
+  margin-bottom: 0;
+}

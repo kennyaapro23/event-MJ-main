@@ -1,0 +1,30 @@
+server:
+  port: 9095
+
+spring:
+  application:
+    name: ms-gateway-server
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: ms-participants-service
+          uri: lb://ms-participants-service
+          predicates:
+            - Path=/participants/**
+        - id: ms-registro-server
+          uri: lb://ms-registro-service
+          predicates:
+            - Path=/registros/**
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8095/eureka}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
